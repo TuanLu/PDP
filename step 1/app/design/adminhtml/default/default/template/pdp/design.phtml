@@ -1,0 +1,100 @@
+<?php 
+	$mediaUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) .'pdp/images/';
+	$baseUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK);
+	$collection = Mage::getModel('pdp/pdp')->getDesignCollection();
+	
+?>
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12">
+			<div id="design-manage">
+				<div class="span8">
+					<div class="btn-group-top">
+						<h3><span class="title">Manage PDP Templates</span></h3>
+					</div>
+				</div>
+				<div class='span4'>
+					<div class="action-panel">
+						<div class="btn-group">
+							<input type="hidden" name="base_url" id="base_url" value="<?php echo $baseUrl ?>"/>
+							<input type="hidden" name="media_url" id="media_url" value="<?php echo $mediaUrl ?>"/>
+							<button class="btn">Action</button>
+							<button class="btn dropdown-toggle" data-toggle="dropdown">
+								<span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu">
+								<li><a href="#" id="disable_item">Disable Selected Item(s)</a></li>
+								<li><a href="#" id="enable_item">Enable Selected Item(s)</a></li>
+								<li class="divider"></li>
+								<li><a href="#" id="delete_item">Delete Selected Item(s)</a></li>
+							</ul>
+						</div>
+						<div class="btn-group">
+							<?php $addUrl = Mage::helper("adminhtml")->getUrl("pdp/adminhtml_designtemplate_tshirt/index/"); ?>
+							<button type="button" onclick="setLocation('<?php echo $addUrl ?>')" class="btn"><span>Add New PDP Item</span></button>
+						</div>
+					</div>
+				</div>
+				<table class='table table-bordered list_design'>
+					<tr class="thead">
+						<th><!--<input type='checkbox' name='checkall' value="uncheck"/>--></th>
+						<th>Template Title</th>
+						<th>Front</th>
+						<th>Back</th>
+						<th>Style</th>
+						<th>Status</th>
+						<th>Action</th>
+					</tr>
+					<?php foreach ($collection as $design) :?>
+					<tr class="<?php echo($design->getStatus() == 1) ? 'enable-item' : 'disable-item'; echo  ' '.$type1 ?>">
+						<td><input type='checkbox' class='design-item' name='designids[]' id="designid_<?php echo $design->getId() ?>"/></td>
+						<td>
+							<?php echo $design->getTitle() ?>
+						</td>
+						<td>
+							<img src="<?php echo $mediaUrl . $design->getFilename() ?>" width="100" />
+						</td>
+						<td>
+                            <?php if($design->getFilenameBack()!=''){ ?> 
+							<img src="<?php echo $mediaUrl . $design->getFilenameBack() ?>" width="100"/>
+                            <?php }else{echo 'No Image'; } ?>
+						</td>
+						<td>
+							<?php $addColorUrl = Mage::helper("adminhtml")->getUrl("pdp/adminhtml_designtemplate_tshirt/color/",array("design_id"=> $design->getId())); ?>
+							<button type='button' onclick='setLocation("<?php echo $addColorUrl; ?>")'>Add Style</button>
+							<button type='button' class='colorlist-item'  id='colorlist_<?php echo $design->getId() ?>'>Style Lists</button>
+						</td>
+						<td>
+							<?php echo ($design->getStatus() == 1) ? 'Enable' : 'Disable'; ?>
+						</td>
+						<?php $editUrl = Mage::helper("adminhtml")->getUrl("pdp/adminhtml_designtemplate_tshirt/index/",array("id"=> $design->getId())); ?>
+						<td>
+							<a href="<?php echo $editUrl ?>"> Edit </a>
+						</td>
+					</tr>
+					<?php endforeach; ?>
+				</table>
+			</div>
+		
+		</div>
+	</div>
+</div>
+<!--Image Model-->
+<div id="colorlist_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		<h4 id="myModalLabel">Artwork Styles</h4>
+	</div>
+	<div class="modal-body">
+		<table id='colorlist_table' class='table table-bordered'>
+			
+		</table>
+	</div>
+	<div class="modal-footer">
+		<!--<input type="button" name="update_color_name" id="update_color_name" value="Update Color Name" class="btn btn-primary" />
+		<input type="button" name="update_color_price" id="update_color_price" value="Update Price" class="btn btn-primary" />
+		<input type="button" name="update_color_position" id="update_color_position" value="Update Order" class="btn btn-primary" />-->
+		<input type="button" name="save_design_style" id="save_design_style" value="Save Change" class="btn btn-primary" />
+	</div>
+</div>
+

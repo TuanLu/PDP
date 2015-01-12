@@ -1,0 +1,157 @@
+<h3 class="phone-type-title numbers third"><?php echo $this->__("Choose in galleries images or upload your own") ?></h3>
+<div class="tab_design_image">
+	<a tab-content="content_designs" class="active design"><?php echo $this->__("Designs") ?></a>
+	<a tab-content="content_upload" class="upload"><?php echo $this->__('Uploads') ?></a>
+	<?php $facebookInfo = $this->getFacebookInfo() ?>
+	<?php if($facebookInfo['facebook_app_id'] != ''){ ?> 
+	<a tab-content="content_facebook" class="facebook_api"><?php echo $this->__('Facebook') ?></a>
+	<?php } ?>
+</div>
+<div class="content_tab">
+	<div class="content_designs">
+		<?php $categoryOptions = $this->getArtworkCategories() ?>
+		<ul id='image_category_list'>
+			<?php 
+			$options = $categoryOptions;
+			$check_first = 0;
+			foreach ($options as $key => $value) {
+				if($check_first++==0){$act='class="active cat_loaded" cr_act="2"';}else{$act='';}
+				echo "<li ".$act."> <span id='". $key ."'>{$value}</span></li>";
+			}
+			?>
+		</ul>
+		<ul id="icon_list">
+			<?php $defaultArtCate = Mage::getModel('pdp/artworkcate')->getDefaultArtCate() ?>
+			<?php foreach ($this->pagingCollection(1, $defaultArtCate, $this->_default_page_size) as $image) : ?>
+			<li cat="<?php echo $image->getCategory(); ?>">
+				<a rel="clover" class="selection_img">
+					<?php $colorImg = Mage::getModel('pdp/pdp')->getColorImageFrontend($image->getId()); ?>
+					<img src="<?php echo $this->_artworkPath . $image->getFilename()  ?>" id="img<?php echo $image->getId(); ?>" color="<?php echo $colorImg ?>" />
+				</a>
+			</li>
+			<?php endforeach; ?>
+		</ul>
+		<div class="add-more">
+			<input type="hidden" value='<?php echo $this->_default_page_size ?>' name='default_page_size' id="default_page_size" />
+			<button class="btn" id="load_more_image" type="button">Load More Image</button>
+		</div>
+	</div>
+	<div class="content_upload no-display">
+		<?php $uploadImageAction = Mage::getBaseUrl() . "pdp/index/uploadCustomImage" ?>
+		<form id="upload_images_form" action="<?php echo $uploadImageAction ?>" method="POST" enctype="multipart/form-data">
+			<input type="file" multiple="multiple" accept="image/*" name="uploads[]" id="fileToUpload" />
+			<!--<button id="upload_custom_img_btn" class="pdp-btn" type="button" name="upload_custom_img_btn"><?php //echo $this->__('Upload') ?></button>-->
+			<div id="response"></div>
+		</form>
+		<?php $customImageInSession = Mage::getSingleton("core/session")->getCustomUploadImages(); ?>
+		<div id="lists_img_upload">
+		<?php if (count($customImageInSession) > 0) : ?>
+			<?php //echo "<pre>"; print_r($customImageInSession); ?>
+			<?php foreach($customImageInSession as $_customImg) : ?>
+			<span><img alt="Invalid Image" src="<?php echo $_customImg ?>" color=""></span>
+			<?php endforeach; ?>
+		<?php endif; ?>
+		</div>
+	</div>
+	<div class="content_facebook no-display">
+		  <div id="fb-root"></div>
+		  <div id="user-info"></div>
+		  <div id="photos_album"></div>
+		  <button id="fb-auth"><?php echo $this->__('Please login Facebook') ?></button> 
+	</div>
+</div>
+<script type="text/javascript">
+var uploadImg = jQuery.noConflict();
+uploadImg(function($){
+	/****************** Upload Custom Image Section *************************/
+    $('#fileToUpload').hover(function () {
+        if (!$(this).hasClass("active")) {
+            document.getElementById('fileToUpload').addEventListener('change', handleFileSelect, false);
+            $(this).addClass("active")
+        }
+    });
+	function uploadCustomImage () {
+		var form = $("#upload_custom_image");
+		uploadProgress(0);
+		var formData = new FormData();
+		$.each(queue, function(i, item) {
+			if (item.upload) formData.append(item.name, item.file);
+		});
+		//Reset queue array
+		while(queue.length > 0) { 
+			queue.pop();
+		}
+		var uploadUrl = $("#upload_images_form").attr("action");
+		$.ajax({
+			url: uploadUrl,
+			data: formData,
+			cache: false,
+			contentType: false,
+			processData: false,
+			type: 'POST',
+			success: function(data){
+				uploadProgress(100);
+				if (data != "") {
+					showUploadedImage(data);
+				}
+			},
+			xhr: function() {
+				xhr = $.ajaxSettings.xhr()
+				xhr.upload.onprogress = uploadProgress
+				xhr.upload.onloadend = uploadProgress
+				return xhr
+			}
+		});
+	}
+	$("#upload_custom_img_btn").click(function(){
+		if (!queue.length) {
+			return false;
+		}
+		uploadCustomImage();
+	});
+	var queue = [];
+	function handleFileSelect(d) {
+        var g = d.target.files; 
+		var name = d.target.name;
+		$.each(g,function(i,file){
+			if (file.type.match("image/")) {
+				queue.push({name:name,file:file,upload:true});
+				uploadCustomImage();
+				//empty queue;
+				queue = [];
+			} else {
+				alert("Please upload a file in one of the following formats: .svg, .jpg, .png, .jpeg, .bmp, .gif");
+				document.getElementById("upload_images_form").reset();
+			}
+			
+		});
+    }
+	function percentage(i,total){
+		return Math.round(total?i * 100 / total:100).toString() + '%'
+	}
+	function uploadProgress(evt){
+		var t=$.type(evt),
+			pcent=t=='object'&&evt.lengthComputable?percentage(evt.loaded,evt.total):
+				  t=="number"?evt+'%':
+				  t=="string"?evt:
+				  "0%";
+				  //console.log(pcent);
+        $('#response').html(pcent);
+        if(pcent=='100%'){
+            $('#response').hide();
+        } else {
+			$('#response').show();
+		}
+	}
+	function showUploadedImage(response) {
+		var images = $.parseJSON(response);
+		if (images.length) {
+			$.each(images, function(index, imgSrc) {
+				$("#lists_img_upload").append("<span><img color='' src='" + imgSrc + "' alt='Custom Upload Image'/></span>");
+			});
+		}
+		document.getElementById("upload_images_form").reset();
+	}
+	/****************** End Upload Custom Image Section *************************/
+});
+</script>

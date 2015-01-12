@@ -1,0 +1,85 @@
+<?php
+	$baseUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK);
+    $mediaUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);
+	$skinPath = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN);
+	$data = $this->getData();
+    $noImagePath = $mediaUrl . 'pdp/images/no_image.jpg';
+	$iW = $iH = $iL = $iT = "";
+	$title = $price = $designId = "";
+	$enableText = $enableCustomerImage = $enablePredefinedImage = "";
+	if ($data['id'] != "") {
+		//Edit mode
+		$iW = $data['canvas_w'];
+		$iH = $data['canvas_h'];
+		$iT = $data['canvas_t'];
+		$iL = $data['canvas_l'];
+		
+		$designId = $data['id'];
+		
+		$title = $data['title'];
+		$price = $data['price'];
+		$enableText = $data['enable_text'];
+		$enableCustomerImage = $data['enable_customer_image'];
+		$enablePredefinedImage = $data['enable_predefined_image'];
+        $imgPath = $data['image_path'];
+	    $imageId = $data['image_id'];
+	    $status = $data['status'];
+	    $position = $data['position'];
+	}
+?>
+<form class="form-horizontal" id="design-form" name="design-form" method="POST" action="<?php echo Mage::helper("adminhtml")->getUrl("pdp/adminhtml_pdp/save/"); ?>" enctype="multipart/form-data">
+	<input type="hidden" name="form_key" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" />
+	<input type="hidden" name="design-id" value="<?php echo $designId ?>"/>
+	<div id="designForm" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h4 id="myModalLabel">Design Form</h4>
+		</div>
+		<div class="modal-body"> 
+			<div class="tab-content">
+				<div class="tab-pane active" id="print_area">
+					<div class="img_area">
+						<div class="inlay_area"></div>
+                        <img id="designImage" src="<?php echo $imgPath==''?$noImagePath:$imgPath ?>" alt="Main image" />
+					</div>
+					<div class="design-area">
+                        <div class="control-group">
+                            <div class="item_group"><label>Title:</label> <input id="title" name="title" type="text" class="span3 " value="<?php echo $title; ?>" /></div>
+    					</div>
+						<div class="group-controls">
+							<input id="image_id" name="image_id" type="hidden" value="<?php echo $imageId; ?>"/>
+							<div class="item_group"><label>Width:</label> <input id="iwidth" name="iwidth" type="text" class="span3 " value="<?php echo $iW==''?'223':$iW; ?>" /></div>
+							<div class="item_group"><label>Height:</label> <input id="iheight" name="iheight" type="text" class="span3 " value="<?php echo $iH==''?'460':$iH; ?>"/></div>
+							<div class="item_group"><label>Top:</label> <input id="itop" name="itop" type="text" class="span3 " value="<?php echo $iT==''?'0':$iT; ?>"/></div>
+							<div class="item_group"><label>Left:</label> <input id="ileft" name="ileft" type="text" class="span3 " value="<?php echo $iL==''?'0':$iL; ?>"/></div>
+						</div>
+                        <div class="control-group">
+                            <div class="radio-item"><label>Enable Text:</label><input name="enable_text" type="checkbox" <?php echo ($enableText != '') ? "checked='checked'" : ''; ?>/></div>
+                            <div class="radio-item"><label>Enable Customer Image:</label><input name="enable_customer_image" type="checkbox" <?php echo ($enableCustomerImage != '') ? "checked='checked'" : ''; ?>/></div>
+                            <div class="radio-item"><label>Enable Predefined Image:</label><input name="enable_predefined_image" type="checkbox" <?php echo ($enablePredefinedImage != '') ? "checked='checked'" : ''; ?>/></div>
+                            <div class="radio-item">
+                                <label><?php echo $this->__("Position") ?>:</label>
+                                <input name="position" type="text" class="input_position" value="<?php echo $position; ?>" />
+                            </div>
+                            <div class="radio-item"><label><?php echo $this->__("Status") ?>:</label>
+                                <select name="status" style="width: 100px; float: right;">
+                                    <option <?php if($status==1){ ?> selected="selected" <?php } ?> value="1"><?php echo $this->__("Enable") ?></option>
+                                    <option <?php if($status==2){ ?> selected="selected" <?php } ?> value="2"><?php echo $this->__("Disable") ?></option>
+                                </select>
+                            </div>
+    					</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+            <?php //if ($data['id'] == "") : ?>
+                <div class="browse-image">
+                    <input type="file" name="filename" onchange="MST.previewImage(this)" />
+                </div>
+            <?php //endif; ?>
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+			<button class="btn btn-primary" type="submit">Save changes</button>
+		</div>
+	</div>
+<form>

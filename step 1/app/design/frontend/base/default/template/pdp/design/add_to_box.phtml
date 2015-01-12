@@ -1,0 +1,17 @@
+<?php
+$btnLabel = "Add To Cart";$btnWishlist = "Add To Wishlist";
+$params = Mage::app()->getRequest()->getParams();
+//Zend_Debug::dump($params);
+if (isset($params['item-id']) && $params['item-id'] != "") {
+	$btnLabel = "Update Cart";
+}if (isset($params['wishlist-id']) && $params['wishlist-id'] != "") {	$btnWishlist = "Update Wishlist";}
+?>
+<span id="save_design_btn" class="pdp-btn"><?php echo $this->__('Done'); ?></span>
+<?php
+/**
+<span id="pdp_add_to_cart" class="pdp-btn"><?php echo $this->__($btnLabel); ?></span>
+<?php if ($this->helper('wishlist')->isAllow()) : ?>
+<span id="pdp_add_to_wishlist" class="pdp-btn"><?php echo $this->__($btnWishlist); ?></span>
+<?php endif; ?>
+ **/
+?>

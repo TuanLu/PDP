@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<config>
+	<tabs>
+        <mst translate="label" module="pdp">
+            <label>Product Design Pro</label>
+            <sort_order>320</sort_order>
+        </mst>
+    </tabs>
+	<sections>
+		<pdp translate="label" module="pdp">
+			<label>PDP - Settings</label>
+			<tab>mst</tab>
+			<frontend_type>text</frontend_type>
+			<sort_order>777</sort_order>
+			<show_in_default>1</show_in_default>
+			<show_in_website>1</show_in_website>
+			<show_in_store>1</show_in_store>
+			<groups>
+				<info>
+                    <frontend_model>pdp/system_config_info</frontend_model>
+                    <sort_order>10</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                </info>
+				<act translate="label">
+                    <label>License</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>40</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <fields>
+						<key translate='label'>
+                    		<label>Key </label>
+                    		<frontend_type>text</frontend_type>
+                    		<sort_order>90</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+							<backend_model>pdp/saveconfig</backend_model>
+                    	</key>
+						<actinfo translate='label'>
+                    		<label>License Info</label>
+                    		<frontend_type>label</frontend_type>
+                    		<sort_order>91</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+							<frontend_model>pdp/system_config_form_field_notification</frontend_model> 
+                    	</actinfo>
+                    </fields>
+                </act>
+                <setting translate="label">
+                    <label>Settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>50</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <fields>
+						<enable translate='label'>
+                    		<label>Enable PDP </label>
+                    		<frontend_type>select</frontend_type>
+                    		<sort_order>95</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <!-- <show_in_website>1</show_in_website> -->
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                    	</enable>
+                        <!-- <display>
+                            <label>Display Customize Item In Cart Types</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>MST_Pdp_Model_Displaytype</source_model>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                        </display> -->
+                        <jquery translate='label'>
+                    		<label>Load jQuery in product page </label>
+                    		<frontend_type>select</frontend_type>
+							<comment>Select No if the jQuery libraries already exist to remove jQuery conflicts. Select Yes to load jquery library from PDP module(jquery-1.8.0.min.js - size/92Kb).</comment>
+                    		<sort_order>195</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                    	</jquery>
+                    </fields>
+                </setting>
+				<social translate="label">
+                    <label>Social Setting</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>70</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <fields>
+						<enable_facebook translate='label'>
+                    		<label>Enable Facebook </label>
+                    		<frontend_type>select</frontend_type>
+                    		<sort_order>95</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                    	</enable_facebook>
+						<facebook_app_id translate='label'>
+                    		<label>Facebook App ID: </label>
+                    		<frontend_type>text</frontend_type>
+                    		<sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                    	</facebook_app_id>
+						<facebook_secret_key translate='label'>
+                    		<label>Facebook Secret Key: </label>
+                    		<frontend_type>text</frontend_type>
+                    		<sort_order>120</sort_order>
+                            <show_in_default>1</show_in_default>
+                    	</facebook_secret_key>
+                    </fields>
+                </social>
+				<!--<helps translate="label">
+                    <label>Help and Document(?)</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>100</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <fields>
+						<enable translate='label'>
+                    		<label>DOCUMENT(s)</label>
+                    		<frontend_type>label</frontend_type>
+                    		<sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            &lt;!&ndash; <show_in_website>1</show_in_website> &ndash;&gt;
+                            &lt;!&ndash; <source_model>adminhtml/system_config_source_yesno</source_model> &ndash;&gt;
+							<comment><![CDATA[
+							- <a href="http://productsdesignerpro.com/document/installation-guide.html" target="_blank">Installation Guide</a><br/>
+							- <a href="http://productsdesignerpro.com/document/user-manual-guide.html" target="_blank">User Manual Guide</a><br/>
+							- <a href="http://www.productsdesignerpro.com" target="_blank">Live Help(?)</a><br/>
+							]]></comment>
+                    	</enable>
+					</fields>
+				</helps>-->
+			</groups>
+		</pdp>
+	</sections>
+</config>

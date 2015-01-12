@@ -1,0 +1,76 @@
+<div class="pdp_add_text_wrap">
+	<h3 class="product-type-title numbers first"><?php echo $this->__("Add Text") ?></h3>
+	<div class="add_text_field">
+		<!--<input placeholder="<?php echo $this->__('Add text...'); ?>" id="add_text_input"/> -->
+		<textarea placeholder="<?php echo $this->__('Add text...'); ?>"  maxlength="100" id="add_text_input"></textarea>
+		<div id="change_text_type">
+			<ul>
+				<li><a class="text bold">B</a></li>
+				<li><a class="text italic">I</a></li>
+				<li><a class="text underline">U</a></li>
+				<li><a class="align align_left active">L</a></li>
+				<li><a class="align align_center">C</a></li>
+				<li><a class="align align_right">R</a></li>
+				<li><a class="align align_justify">J</a></li>
+			</ul>
+		</div>
+		<div class="change_font">
+			<div class="box_text">
+				<label><?php echo $this->__("Text Font") ?></label>
+				<span id="select_font_span"><?php echo $this->__('Arial'); ?></span>
+				<ul id="select_font">
+					<li rel="<?php echo $this->__("Arial") ?>"><?php echo $this->__("Arial") ?></li>
+					<?php foreach ( $this->getFonts() as $font) : ?>
+					<li rel="<?php echo $font->getName() ?>"><?php echo $this->__('Sample Text') ?></li>
+					<?php endforeach; ?>
+				</ul>
+			</div>
+			<div class="box_font_size">
+				<label><?php echo $this->__("Font size") ?></label>
+				<div class="select_font_size">
+					<span class="prev_t"><?php echo $this->__('Prev') ?></span>
+					<input type="text" value="20" id="select_font_size" />
+					<span class="next_t"><?php echo $this->__('Next') ?></span>
+				</div>
+			</div>
+			<div class="box_color">
+				<label><?php echo $this->__('Font Color') ?></label>
+				<div id="font_color_div"><div class="color_display" style="background-color: #444444"></div></div>
+			</div>
+			<div class="font_shape">
+				<div class="font_outline_color">
+					<div class="use_shadow">
+						<input type="checkbox" name="use_shadow" id="use_shadow" value="0" />
+						<label for="use_shadow"><?php echo $this->__('Text outline color') ?></label>
+					</div>
+					<div class="h-shadow no-display">
+						<label><?php echo $this->__('Horizontal') ?></label> 
+						<span class="prev_t"><?php echo $this->__('Prev') ?></span>
+						<input type="text" value="0" id="h-shadow" />
+						<span class="next_t">Next</span>
+					</div>
+					<div class="v-shadow no-display">
+						<label><?php echo $this->__('Vertical') ?></label> 
+						<span class="prev_t"><?php echo $this->__('Prev') ?></span>
+						<input type="text" value="0" id="v-shadow" />
+						<span class="next_t">Next</span>
+					</div>
+					<div class="blur no-display">
+						<label><?php echo $this->__('Blur') ?></label> 
+						<span class="prev_t"><?php echo $this->__('Prev') ?></span>
+						<input type="text" value="0" id="t-blur" />
+						<span class="next_t">Next</span>
+					</div>
+					<div class="color no-display">
+						<label><?php echo $this->__('Color') ?></label>
+						<div id="font_outline_color"><div class="color_display" style="background-color: #ffffff"></div></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="clear"></div>
+		<div id="add_text_action" title="Add text">
+			<span><?php echo $this->__('Add Text'); ?></span>
+		</div>
+	</div>    
+</div> 

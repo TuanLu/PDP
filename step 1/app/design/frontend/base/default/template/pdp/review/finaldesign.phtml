@@ -1,0 +1,133 @@
+<?php 
+$jsonString = $this->getData('pdpdesign');
+$item_id = $this->getData('item_id');
+?>
+<html>
+	<head>
+		<title><?php echo $this->__('Final Design') ?></title>
+		<script type="text/javascript" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS) ?>pdp/js/jquery.min.js"></script>
+		<script type="text/javascript" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS) ?>pdp/js/final_design.js"></script>
+		<link type="text/css" rel="stylesheet" href="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS) ?>pdp/css/final_design.css" />
+		<style>
+			@media print{
+				.pdp_wrap .pdp_sides_control,
+				.pdp_wrap .pdp_action {
+					display: none;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="pdp_wrap">
+			<div class="default_setting" style="display: none;">
+				<?php echo $this->getLayout()->createBlock('core/template')->setTemplate('pdp/design/default_setting.phtml')->toHtml() ?>
+			</div>
+			<div class="pdp_design_view">
+			<?php 
+			$mediaUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . "pdp/images/";
+			$jsonObjs = $this->helper('pdp')->decodePdpString($jsonString);
+			if (count($jsonObjs)){
+			    $ci = 0;
+				foreach($jsonObjs as $jsonObj){
+					   $info = $this->helper('pdp')->decodePdpString($jsonObj->json);
+					   $inlay = explode(',',$info->inlay);
+			?> 
+				<div class="pdp_side" alt="<?php echo $jsonObj->name; ?>">
+					<div id="pdp_cart_view_<?php echo $jsonObj->name.'_'.$item_id; ?>" class="img_result" style="position: relative;">
+						<img class="bg" src="<?php echo $mediaUrl . $jsonObj->img ?>" alt="Image"/>
+						<?php $frontInlayStyle = "position: absolute; width: $inlay[0]px; height: $inlay[1]px; top: $inlay[2]px; left: $inlay[3]px;" ?>
+						<div class="wrap_inlay" style="<?php echo $frontInlayStyle ?>">
+							<?php 
+								$items = $info->items; 
+								foreach($items as $item){
+									?>
+									<div pos="<?php echo($ci++) ?>"  scx="<?php echo $item->scx ?>" scy="<?php echo $item->scy ?>" angle="<?php echo $item->angle ?>" class="pdp_item" style="<?php echo $item->css ?>">
+										<?php if($item->type == 'text'){ ?>
+											<p style="<?php echo $item->itemcss ?>"><?php echo $item->text ?></p>
+										<?php } ?>
+										<?php if($item->type == 'image'){ ?>
+											<img src="<?php echo $item->path ?>" style="<?php echo $item->itemcss ?>" />
+										<?php } ?>
+									</div>
+								<?php }
+							?>
+						</div>
+					</div>
+				</div>
+			<?php } ?>
+			<?php } ?>
+			</div>
+            <div class="clear"></div>
+			<div class="pdp_info_items">
+				<table border="0">
+					<thead>
+						<th><?php echo $this->__('Side'); ?></th>
+						<th><?php echo $this->__('Type'); ?></th>
+						<th><?php echo $this->__('Path/Text'); ?></th>
+					</thead>
+					<tbody>
+						<?php     
+                            $ci = 0;
+							foreach($jsonObjs as $jsonObj){
+							$info = $this->helper('pdp')->decodePdpString($jsonObj->json); 
+							$items = $info->items; 
+							foreach($items as $item){
+						?>  
+							<tr class="item_id_<?php echo($ci++) ?>">
+								<td><?php echo $jsonObj->name; ?></td>
+								<td><?php echo $item->type; ?></td>
+								<td><?php if($item->type=='text'){
+								    echo '<ul style="list-style: none outside none;">
+                                        <li>
+                                            <label>'.$this->__('Text') .':</label>
+                                            '.$item->text.'
+                                        </li>
+                                        <li>
+                                            <label>'.$this->__('Font-size') .':</label>
+                                            <span class="font_size"></span>
+                                        </li>
+                                        <li>
+                                            <label>'.$this->__('Font-family') .':</label>
+                                            <span class="font_family"></span>
+                                        </li>
+                                        <li>
+                                            <label>'.$this->__('Color') .':</label>
+                                            <span class="font_color"></span>
+                                        </li>
+                                        <li>
+                                            <label>'.$this->__('Shadow') .':</label>
+                                            <span class="shadow_info"></span>
+                                        </li>
+                                    </ul>'
+                                    ;
+                                
+                                
+                                
+                                }else{echo '<img src="'.$item->path.'" />';}  ?></td>
+							</tr>
+						<?php }
+						?>
+						<?php } ?>
+					</tbody>
+				</table>
+			</div>
+			<div class="pdp_sides_control">
+				<div onclick="window.print()"><?php echo $this->__('Print') ?></div>
+				<?php if (count($jsonObj)){ ?>
+					<div class="pdp_display_all active"><?php echo $this->__('Show All Info'); ?></div>
+					<div class="pdp_display_all_side"><?php echo $this->__('Show All Sides'); ?></div>
+					<div class="pdp_remove_background"><?php echo $this->__('Remove Background'); ?></div>
+					<div class="pdp_items_info"><?php echo $this->__('Items info'); ?></div>
+				<?php
+					foreach($jsonObjs as $jsonObj){
+				?>
+					<div class="pdp_side" side_name="<?php echo $jsonObj->name; ?>">
+						<img width="120" src="<?php echo $mediaUrl . $jsonObj->img ?>" alt="Image"/>
+					</div>
+				<?php           
+					}
+				} ?>
+			</div>
+		</div>
+	</body>
+</html>

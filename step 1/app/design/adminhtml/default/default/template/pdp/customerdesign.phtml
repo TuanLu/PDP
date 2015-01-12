@@ -1,0 +1,36 @@
+<?php
+$helper = Mage::helper('pdp');
+$fonts = $helper->getFonts();
+?>
+<!DOCTYPE html>
+<html>
+	<head>
+		<script type='text/javascript' src='<?php echo $this->getSkinUrl('pdp/js/viewfinaldesign.js') ?>'></script>
+		<title>Final Design Review</title>
+		<style type="text/css">
+			<?php foreach ( $fonts as $font) { ?>
+			@font-face {
+				font-family: '<?php echo $font->getName() ?>';
+				src: url('<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA); ?>pdp/fonts/<?php echo $font->getName() ?>.<?php echo $font->getExt() ?>');
+			}
+			<?php } ?>
+		</style>
+	</head>
+	<body>
+		<button type="button" class="btn" onclick="history.back()">Back</button>
+		<div id='wrapper'>
+			<div id='final_design'>
+			<?php 
+				$designId = Mage::app()->getRequest()->getParam('id');;
+				if ($designId != "") {
+					$designInfo = Mage::getModel('pdp/pdptemplate')->load($designId)->getPdpDesign();
+					echo "<input type='hidden' value='" . $designInfo  . "' name='option[]' class='design-option' ";
+				} else {
+					echo "<h3>Design not extist!</h3>";
+				}
+			?>
+			</div>
+			<div id='design_result' style='float: left;'></div>
+		</div>
+	</body>
+</html>

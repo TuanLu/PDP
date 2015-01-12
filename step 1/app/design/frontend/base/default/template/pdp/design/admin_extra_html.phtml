@@ -1,0 +1,28 @@
+<link rel="stylesheet" type="text/css" href="<?php echo $this->getJSUrl('pdp/css/jquery.ui.core.css') ?>">
+<link rel="stylesheet" type="text/css" href="<?php echo $this->getJSUrl('pdp/css/styles.css') ?>">
+<script src="<?php echo $this->getJSUrl('pdp/js/jquery.min.js') ?>"></script>
+<script src="<?php echo $this->getJSUrl('pdp/js/ui/jquery-ui-1.9.2.custom.min.js') ?>"></script>
+<script src="<?php echo $this->getJSUrl('pdp/js/ui/jquery.ui.touch.min.js') ?>"></script>
+<script src="<?php echo $this->getJSUrl('pdp/js/ui/jquery.ui.rotatable.js') ?>"></script>
+<script src="<?php echo $this->getJSUrl('pdp/js/ui/jquery.ui.rotatabletext.js') ?>"></script>
+<script src="<?php echo $this->getJSUrl('pdp/js/design.js') ?>"></script>
+<script src="<?php echo $this->getJSUrl('pdp/js/facebook_connect.js') ?>"></script>
+<style>
+	#pdp_save_admin_sample {
+		background: none repeat scroll 0 0 #FB913E;
+		border: 1px solid #CCCCCC;
+		color: #FDF5FF;
+		cursor: pointer;
+		float: right;
+		font-weight: bold;
+		margin-right: 15px;
+		padding: 5px;
+		line-height: 20px;
+	}
+</style>
+<div class='design-btn' style="display: none">
+<?php echo $this->getLayout()->createBlock('pdp/designbutton')->setTemplate('pdp/product/design_button.phtml')->toHtml() ?>
+</div>
+<div class='wrap_pdp_design'>
+	<span id="pdp_save_admin_sample" class="pdp-btn"><?php echo $this->__('Save Sample') ?></span>
+</div>

@@ -1,0 +1,44 @@
+<?php
+if (!$this->isDesignAble()) {
+	return false;
+}
+$area = "";
+$params = Mage::app()->getRequest()->getParams();
+if (isset($params['area']) && $params['area'] != "") {
+	$area = $params['area'];
+}
+$pdpDesignInfo = $this->getPdpDesignInfo();
+?>
+<div style="display: none">
+	<input type="hidden" id="url_site" value="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK) ?>" />
+	<input type="hidden" id="base_url" value="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK) ?>" />
+    <input type="hidden" name="extra_options" value='<?php echo $pdpDesignInfo['extra_options'] ?>'/>
+	<a id="pdp_design_button" class="not_load no-display" href="#pdp_design_popup">View</a>
+	<input type="hidden" id="current_product_id" value="<?php echo $this->getProductId() ?>" />
+	<input type="hidden" id="pdp_design_action" value="<?php echo $pdpDesignInfo['action'] ?>" />
+	<input type="hidden" id="product_url" value="<?php echo $this->getProductUrl(); ?>" />
+	<input type="hidden" id="pdp_design_share" value="<?php echo $pdpDesignInfo['share_id'] ?>" />
+	<input type="hidden" id="pdp_btn_action" value=""/>
+	<input type="hidden" id="cart_item_id" value="<?php echo $pdpDesignInfo['cart_item_id'] ?>" />
+	<input type="hidden" id="wishlist_item_id" value="<?php echo $pdpDesignInfo['wishlist_item_id'] ?>" />
+</div>
+<span class="pdp_loading no-display"><span>Please wait...</span></span>
+<?php if ($this->isDesignAble()) :?>
+<div class="design-btn">
+    <span class="button create-sample-btn design-product" id="design_product_<?php echo $this->getProductId() ?>"><?php echo $this->__('Customize it!'); ?></span>
+</div>
+<?php endif; ?>
+<div class="no-display">
+	<div id="pdp_design_popup"></div>
+</div>
+<?php if ($area != "backend") :?>
+	<?php if (Mage::getStoreConfig('pdp/setting/jquery') == 1) : ?>
+	<script src="<?php echo $this->getJSUrl('pdp/js/jquery.min.js') ?>"></script>
+	<?php endif; ?>
+	<script src="<?php echo $this->getJSUrl('pdp/js/ui/jquery-ui-1.9.2.custom.min.js') ?>"></script>
+	<script src="<?php echo $this->getJSUrl('pdp/js/ui/jquery.ui.touch.min.js') ?>"></script>
+	<script src="<?php echo $this->getJSUrl('pdp/js/ui/jquery.ui.rotatable.js') ?>"></script>
+	<script src="<?php echo $this->getJSUrl('pdp/js/ui/jquery.ui.rotatabletext.js') ?>"></script>
+	<script src="<?php echo $this->getJSUrl('pdp/js/frontend_popup.js') ?>"></script>
+	<script src="<?php echo $this->getJSUrl('pdp/js/facebook_connect.js') ?>"></script>
+<?php endif; ?>

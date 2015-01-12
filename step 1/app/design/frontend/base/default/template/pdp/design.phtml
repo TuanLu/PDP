@@ -1,0 +1,90 @@
+<?php
+	if (Mage::getStoreConfig('pdp/setting/enable') == 0) {
+		echo "<h3>PDP module is disabled. Please enable PDP to use it's features!</h3>";
+		return false;
+	}
+    $productId = $this->getCurrentProductId();
+    $product = Mage::getModel('catalog/product')->load($productId);
+    $title = $product->getName();
+	$viewMode = $this->getViewMode();
+	$jsonString = "";
+	if ($viewMode == "backend") {
+		$jsonString = $this->_helper->getAdminTemplates($productId);
+	} else {
+		if($this->getShareId() != null) {
+			$jsonString = $this->_helper->getShareJsonString($this->_shareId);
+		} else {
+			$jsonString = $this->_helper->getAdminTemplates($productId);
+		}
+	}
+?>
+<?php if ($viewMode == "backend") : ?>
+	<?php echo $this->getLayout()->createBlock('pdp/pdp')->setTemplate('pdp/design/admin_extra_html.phtml')->toHtml() ?>
+<?php else : ?>
+	<?php echo $this->getLayout()->createBlock('core/template')->setTemplate('pdp/design/load_js_ater.phtml')->toHtml() ?>
+<?php endif; ?>
+
+<input name="pdp_design_string" type="hidden" value="<?php echo htmlspecialchars ($jsonString) ?>"/>
+<div class="wrapper_pdp">
+	<?php if ($viewMode != "backend") : ?>
+    <h2 class="product-title"><?php echo $title ?></h2>
+	<?php endif; ?>
+    <div class="wrap_pdp_design">
+        <div id="design_control">
+            <div class="control_tab">
+                <div class="control_tab_wrap">
+                    <div class="pdp_design tab_main active" tab="pdp_design">
+                        <a><?php echo $this->__("General Info"); ?></a>
+                    </div>
+                    <div class="add_artwork_tab tab_main" tab="add_artwork">
+                        <a><?php echo $this->__("Add Artwork") ?></a>
+                    </div>
+                    <div class="add_text_tab tab_main" tab="add_text">
+                        <a><?php echo $this->__("Add Text") ?></a>
+                    </div>
+                </div>
+            </div>
+            <div class="pdp_design tab_content">
+				<?php echo $this->getChildHtml('design_item') ?>
+            </div>
+            <div id="select_image" class="tab_content add_artwork no-display">
+				<?php echo $this->getChildHtml('pdp_artworks') ?>
+            </div>
+            <div id="add_text" class="tab_content add_text">
+                <?php echo $this->getChildHtml('pdp_text') ?>
+            </div>
+            <div id="edit_item_wrap">
+				<?php echo $this->getChildHtml('edit_item_buttons') ?>
+            </div>
+			<?php if ($viewMode != "backend") : ?>
+            <div class="add_to_box">
+               <?php echo $this->getChildHtml('add_to_box') ?>
+            </div>
+			<?php endif; ?>
+        </div>
+        <div class="product-img-box">
+            <div class="product-image act" id="product-image-wrap">
+                <div id="wrap_inlay" class="wrap_inlay"></div>
+            </div>
+            <ul class="color_att"></ul>
+        </div>
+    </div>
+    <div id="img_sessiton" class="no-display"></div>
+    <div id="pdp_info_to_action" class="no-display">
+        <input type="hidden" value="<?php echo $product->getProductUrl(); ?>" id="current_url" />
+        <input type="hidden" id="product_id" name="product_id" value="<?php echo $productId; ?>" />
+        <input type="hidden" value="<?php echo $this->getSkinUrl('pdp/') ?>" id="skin_url" />
+    </div>
+	<?php //if ($viewMode == "product") : ?>
+	<?php
+	/**
+	<div class="pdp_share_buttons" style="display: none">
+		<?php echo $this->getChildHtml('share_buttons'); ?>
+	</div>
+	**/
+	?>
+	<?php //endif; ?>
+</div>
+<div class='facebook-info'>
+	<?php echo $this->getChildHtml('facebook_info'); ?>
+</div>

@@ -1,0 +1,113 @@
+<?php
+if (Mage::getStoreConfig('pdp/setting/enable') == 0) {	
+	echo "<h3>PDP module is disabled. Please enable PDP to use it's features!</h3>";
+}
+$baseUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK);
+$productId = Mage::app()->getRequest()->getParam('id');
+$productStatus = Mage::getModel('pdp/productstatus')->getProductStatus($productId);
+$request = Mage::app()->getRequest()->getParams();
+$pdpTabActive = false;
+if(isset($request['tab'])) {
+    if ($request['tab'] == "product_info_tabs_pdpdesign") {
+        $pdpTabActive = true;
+    }
+}
+?>
+<input type="hidden" id="current_product_id" value="<?php echo $productId ?>" />
+<input type="hidden" id="base_url" value="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK) ?>" />
+<input type="hidden" id="request_url" value="<?php echo Mage::helper("adminhtml")->getUrl("pdp/adminhtml_designarea/setuparea") ?>" />
+<input type="hidden" id="add_design_color_url" value="<?php echo Mage::helper("adminhtml")->getUrl("pdp/adminhtml_designarea/adddesigncolor") ?>" />
+<input type="hidden" id="view_design_color_url" value="<?php echo Mage::helper("adminhtml")->getUrl("pdp/adminhtml_designarea/viewdesigncolor") ?>" />
+<input type="hidden" id="preview_design_color_url" value="<?php echo Mage::helper("adminhtml")->getUrl("pdp/adminhtml_designarea/previewdesigncolor") ?>" />
+
+<div class="entry-edit">
+    <div class="entry-edit-head">
+		<h4 class="icon-head head-edit-form fieldset-legend">Enable PDP Design</h4>
+	</div>
+    <div id="group_enable_pdp" class="fieldset fieldset-wide">
+		<div class="hor-scroll">
+			<div>
+				<label>Enable PDP Design</label>
+				<select name="enable_pdp_design">
+					<option value=''><?php echo $this->__("--Please select--") ?></option>
+					<option <?php echo ($productStatus == "1") ? "selected" : ''; ?> value="1"><?php echo $this->__("Yes") ?></option>
+					<option <?php echo ($productStatus == "2") ? "selected" : ''; ?> value="2"><?php echo $this->__("No") ?></option>
+				</select>
+			</div>
+		</div>
+    </div>
+</div>
+<div class="entry-edit">
+    <div class="entry-edit-head">
+		<h4 class="icon-head head-edit-form fieldset-legend">Setup design area and create sample design</h4>
+		<div class="right">
+			<button style="" onclick="" class="scalable add" type="button" title="Add New Side" id="add_new_side">
+				<span><span><span>Add New Side</span></span></span>
+			</button>
+		</div>
+	</div>
+    <div id="group_pdp_sample" class="fieldset fieldset-wide">
+		<div class="hor-scroll">
+			<div class="side-table-container"></div>
+		</div>
+    </div>
+</div>
+<?php $sideTableUrl = Mage::helper("adminhtml")->getUrl("pdp/adminhtml_designarea/getsidetable"); ?>
+<?php $enablePdpDesign = Mage::helper("adminhtml")->getUrl("pdp/adminhtml_designarea/updateStatus"); ?>
+<?php $addNewSide = Mage::helper("adminhtml")->getUrl("pdp/adminhtml_designarea/addNewSide") . "productid/" . $productId; ?>
+<script>
+var mstPdpDesign = jQuery.noConflict();
+mstPdpDesign(function($){
+	PdpSide = {
+		clickPdpTab : function() {
+			$("#product_info_tabs_pdpdesign").click(function() {
+				PdpSide.sendRequest("<?php echo $sideTableUrl . "productid/$productId/isAjax=true" ?>", PdpSide.showSideTable);
+			});
+		}(),
+		showSideTable : function(data) {
+			if (data !== "") {
+				$(".side-table-container").html(data);
+				$("#loading-mask").hide();
+			} else {
+				alert("Something went wrong! Can not get side table conent.");
+			}
+		},
+		allowDesign : function () {
+			$("select[name='enable_pdp_design']").change(function() {
+				if ($(this).val() != "") {
+					PdpSide.sendRequest("<?php echo $enablePdpDesign . "product_id/$productId/status/" ?>" + $(this).val() + "?isAjax=true", function(data) {
+						if(data == ""){
+							$("#loading-mask").hide();
+						}else{
+							alert("Something went wrong. Can not enable or disable PDP design for this product!");
+						}
+					});
+				}
+			});
+		}(),
+		sendRequest : function(url, callback) {
+			$.ajax({
+				type:"GET",
+				url: url,
+				beforeSend:function(){
+					$("#loading-mask").attr("style","left: -2px; top: 0px; width: 1034px; height: 833px; z-index: 10000;");
+					$("#loading-mask").show();
+				},
+				success:function(response){
+					callback(response);
+					$("#loading-mask").hide();
+				}
+			});
+		},
+		addNewSide : function() {
+			$("#add_new_side").on("click", function() {
+				PDPPopup.openPopup("<?php echo $addNewSide ?>", "Add New Side", PDPPopup.setupAreaHandler );
+			});
+		}()
+	}
+    <?php if($pdpTabActive) : ?>
+    $("#product_info_tabs_pdpdesign").click();
+    <?php endif; ?>
+});
+
+</script>
