@@ -295,4 +295,23 @@ class MST_Pdp_Helper_Data extends Mage_Core_Helper_Abstract {
 		}
 		return null;
 	}
+	public function getPdpBaseUrl() {
+		$url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK);
+		$isSecure = Mage::app()->getStore()->isCurrentlySecure();
+		if ($isSecure) {
+			//If current page in secure mode, but menu url not in secure, => change menu to secure
+			//secure mode your current URL is HTTPS
+			if (!strpos($url, 'https://')) {
+				$validUrl = str_replace('http://', 'https://', $url);
+				$url = $validUrl;
+			}
+		} else {
+			//page is in HTTP mode
+			if (!strpos($url, 'http://')) {
+				$validUrl = str_replace('https://', 'http://', $url);
+				$url = $validUrl;
+			}
+		}
+		return $url;
+	}
 }
