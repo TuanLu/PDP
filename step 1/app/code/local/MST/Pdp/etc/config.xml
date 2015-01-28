@@ -56,7 +56,7 @@
 							<add_artworks_cate module="pdp">
 								<title>Manage Artwork Categories</title>
 								<sort_order>10</sort_order>
-								<action>pdp/adminhtml_artworkcate/index</action>
+								<action>pdpadmin/adminhtml_artworkcate/index</action>
 							</add_artworks_cate>
 							<manageartworks module="pdp">
 								<title>Manage Artworks</title>
