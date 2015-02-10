@@ -8,7 +8,7 @@ class MST_Pdp_IndexController extends Mage_Core_Controller_Front_Action
     }
 	public function testAction()
     {
-		echo "Test<pre>";
+		echo "Test<pre> Brand new code from Ubuntu. Yeah";
         $cart = Mage::getModel('checkout/cart')->getQuote();
         foreach ($cart->getAllItems() as $item) {
             Zend_Debug::dump($item->getBuyRequest()->getData());
